@@ -1,8 +1,16 @@
-import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { usePathname } from 'next/navigation';
 
 export default function Nav() {
-	const router = useRouter();
-	const route = router.pathname.substring(1);
+	const [route, setRoute] = useState('');
+	const pathname = usePathname();
+
+	useEffect(() => {
+		let url = pathname.split('/')[1];
+		let firstLetter = url.charAt(0).toUpperCase();
+		url = firstLetter + url.slice(1);
+		setRoute(url);
+	}, [pathname]);
 
 	return (
 		<nav className='bg-white shadow'>
