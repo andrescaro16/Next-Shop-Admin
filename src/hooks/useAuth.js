@@ -5,6 +5,7 @@ import { endpoints } from '@/services/api';
 
 export const useAuth = () => {
 	const [user, setUser] = useState(null);
+    const [error, setError] = useState(null);
 
 	const signIn = async ({ email, password }) => {
         const options = {
@@ -17,12 +18,13 @@ export const useAuth = () => {
             const { data } = await axios.post(endpoints.auth.login, { email, password }, options);
             data ? console.log(data.access_token) : console.log('No data');
         } catch (error) {
-            console.log(error);
+            setError(error);
         }
 	};
 
 	return {
 		user,
 		signIn,
+        error,
 	};
 };

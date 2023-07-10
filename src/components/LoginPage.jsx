@@ -6,7 +6,7 @@ import { useStateContext } from '@/Context/StateContext';
 
 export default function LoginPage() {
 
-	const { useAuthSignIn } = useStateContext();
+	const { useAuthSignIn, useAuthError } = useStateContext();
 	const loginData = useRef(null);
 
 	const onSubmit = (e) => {
@@ -71,6 +71,15 @@ export default function LoginPage() {
 								</a>
 							</div>
 						</div>
+
+						{useAuthError ? (
+							<div className='flex items-center justify-center w-full py-2 px-4 bg-red-200 border border-red-300 rounded-md'>
+								<p className='text-red-800 text-sm'>
+									<span className='font-medium'>Login Failed:</span>
+									<span>Invalid email or password</span>
+								</p>
+							</div>
+						) : null}
 
 						<div>
 							<button
