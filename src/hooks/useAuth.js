@@ -15,8 +15,16 @@ export const useAuth = () => {
             },
         }
         try {
-            const { data } = await axios.post(endpoints.auth.login, { email, password }, options);
-            data ? console.log(data.access_token) : console.log('No data');
+            const res = await axios.post(endpoints.auth.login, { email, password }, options);
+            if(res.data){
+                const token = res.data.access_token;
+                Cookie.set('token', token, { expires: 5 });
+                axios.defaults.headers.Authorization = `Bearer ${token}`;
+                const dataProfile = await axios.get(endpoints.auth.getProfile);
+                if(dataProfile.data){
+                    setUser(dataProfile.data);
+                }
+            }
         } catch (error) {
             setError(error);
         }
