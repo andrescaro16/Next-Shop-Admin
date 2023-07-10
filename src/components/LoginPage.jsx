@@ -2,16 +2,18 @@
 
 import { useRef } from 'react';
 import { LockClosedIcon } from '@heroicons/react/solid';
+import { useStateContext } from '@/Context/StateContext';
 
 export default function LoginPage() {
 
+	const { useAuthSignIn } = useStateContext();
 	const loginData = useRef(null);
 
 	const onSubmit = (e) => {
 		e.preventDefault();
 		const formData = new FormData(loginData.current);
 		const data = Object.fromEntries(formData.entries());
-		console.log(data);
+		useAuthSignIn(data);
 	}
 
 	return (

@@ -1,7 +1,7 @@
 const API = process.env.NEXT_PUBLIC_API_URL;
 const VERSION = process.env.NEXT_PUBLIC_API_VERSION;
 
-const endpoints = {
+export const endpoints = {
     products: {
         getProducts: (limit = 10, offset = 0) => `${API+VERSION}/products?limit=${limit}&offset=${offset}`,
         postProduct: `${API+VERSION}/products`,
@@ -34,4 +34,4 @@ const endpoints = {
         uploadFile: `${API+VERSION}/files/upload`,
         getFile: (filename) => `${API+VERSION}/files/${filename}`,
     },
-}
+};
