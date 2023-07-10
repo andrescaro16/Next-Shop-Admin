@@ -1,7 +1,9 @@
 'use client';
 import { Fragment } from 'react';
+import { useRouter } from 'next/navigation'
 import { Popover, Transition } from '@headlessui/react';
 import { MenuIcon, XIcon } from '@heroicons/react/outline';
+import { useStateContext } from '@/Context/StateContext';
 
 const navigation = [
 	{ name: 'Product', href: '#' },
@@ -11,6 +13,18 @@ const navigation = [
 ];
 
 export default function Home() {
+
+	const { useAuthGetTokenFromCookie } = useStateContext();
+	const router = useRouter();
+
+	const onLogin = () => {
+		const hasToken = useAuthGetTokenFromCookie();
+		if(!hasToken){
+			router.push('/login');
+		}
+	}
+
+
 	return (
 		<div className='relative bg-white overflow-hidden'>
 			<div className='max-w-7xl mx-auto'>
@@ -47,7 +61,7 @@ export default function Home() {
 											{item.name}
 										</a>
 									))}
-									<a href='/login' className='font-medium text-indigo-600 hover:text-indigo-500'>
+									<a className='font-medium text-indigo-600 hover:text-indigo-500 cursor-pointer' onClick={onLogin}>
 										Log in
 									</a>
 								</div>

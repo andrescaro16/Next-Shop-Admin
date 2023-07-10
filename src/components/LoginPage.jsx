@@ -3,6 +3,7 @@
 import { useRef } from 'react';
 import { LockClosedIcon } from '@heroicons/react/solid';
 import { useStateContext } from '@/Context/StateContext';
+import Error from '@/common/Error';
 
 export default function LoginPage() {
 
@@ -72,14 +73,7 @@ export default function LoginPage() {
 							</div>
 						</div>
 
-						{useAuthError ? (
-							<div className='flex items-center justify-center w-full py-2 px-4 bg-red-200 border border-red-300 rounded-md'>
-								<p className='text-red-800 text-sm'>
-									<span className='font-medium'>Login Failed:</span>
-									<span>Invalid email or password</span>
-								</p>
-							</div>
-						) : null}
+						<Error error={useAuthError}/>
 
 						<div>
 							<button

@@ -1,11 +1,37 @@
 import { useState } from 'react';
+import { useRouter } from 'next/navigation'
 import Cookie from 'js-cookie';
 import axios from 'axios';
 import { endpoints } from '@/services/api';
 
+
 export const useAuth = () => {
 	const [user, setUser] = useState(null);
     const [error, setError] = useState(null);
+    const router = useRouter();
+
+    const getProfile = async () => {
+        try {
+            const dataProfile = await axios.get(endpoints.auth.getProfile);
+            if(dataProfile.data){
+                setUser(dataProfile.data);
+                router.push('/dashboard')
+            }
+        } catch (e) {
+            setError("getting-profile");
+        }
+    };
+
+    const getTokenFromCookie = () => {
+        const token = Cookie.get('token');
+        if (token) {
+            axios.defaults.headers.Authorization = `Bearer ${token}`;
+            getProfile();
+            return true;
+        } else {
+            return false;
+        }
+    };
 
 	const signIn = async ({ email, password }) => {
         const options = {
@@ -20,13 +46,10 @@ export const useAuth = () => {
                 const token = res.data.access_token;
                 Cookie.set('token', token, { expires: 5 });
                 axios.defaults.headers.Authorization = `Bearer ${token}`;
-                const dataProfile = await axios.get(endpoints.auth.getProfile);
-                if(dataProfile.data){
-                    setUser(dataProfile.data);
-                }
+                getProfile();
             }
-        } catch (error) {
-            setError(error);
+        } catch (e) {
+            setError("invalid-credentials");
         }
 	};
 
@@ -34,5 +57,6 @@ export const useAuth = () => {
 		user,
 		signIn,
         error,
+        getTokenFromCookie,
 	};
 };

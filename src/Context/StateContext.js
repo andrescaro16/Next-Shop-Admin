@@ -7,7 +7,12 @@ const StateContext = createContext();
 
 export const StateContextProvider = ({children}) => {
 
-    const { user: useAuthUser, signIn: useAuthSignIn, error: useAuthError } = useAuth();
+    const {
+        user: useAuthUser,
+        signIn: useAuthSignIn,
+        error: useAuthError,
+        getTokenFromCookie: useAuthGetTokenFromCookie,
+    } = useAuth();
 
 
     return (
@@ -15,6 +20,7 @@ export const StateContextProvider = ({children}) => {
             useAuthUser,
             useAuthSignIn,
             useAuthError,
+            useAuthGetTokenFromCookie,
         }}>
             {children}
         </StateContext.Provider>
