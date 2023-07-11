@@ -7,13 +7,13 @@ const StateContext = createContext();
 
 export const StateContextProvider = ({children}) => {
 
+    // Auth Context
     const {
         user: useAuthUser,
         signIn: useAuthSignIn,
         error: useAuthError,
         getTokenFromCookie: useAuthGetTokenFromCookie,
     } = useAuth();
-
 
     return (
         <StateContext.Provider value={{
