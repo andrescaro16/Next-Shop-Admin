@@ -1,18 +1,25 @@
 'use client';
 
+import { useState } from "react";
 import { useFetch } from "@/hooks/useFetch";
 import { endpoints } from "@/services/api/index";
+import Pagination from "@/components/Pagination";
 
 
 export default function Dashboard() {
+	const [offsetProducts, setOffsetProducts] = useState(0);
+	const PRODUCT_LIMIT = 20;
 
-    const PRODUCT_LIMIT = 5;
-    const PRODUCT_OFFSET = 0;
-    const { data: products } = useFetch(endpoints.products.getProducts(PRODUCT_LIMIT, PRODUCT_OFFSET));
+    const { data: products } = useFetch(endpoints.products.getProducts(PRODUCT_LIMIT, offsetProducts));
+    const { data: allProducts } = useFetch(endpoints.products.getProducts(0, 0));
+	const totalProducts = allProducts?.length;
+	console.log(totalProducts);
+
 
 	return (
 		<>
 			<div className='flex flex-col'>
+				{(products) ? (<Pagination totalItems={totalProducts} itemsPerPage={PRODUCT_LIMIT} setOffset={setOffsetProducts} neighbours={2} />) : null}
 				<div className='-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8'>
 					<div className='py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8'>
 						<div className='shadow overflow-hidden border-b border-gray-200 sm:rounded-lg'>
