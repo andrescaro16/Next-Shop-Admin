@@ -1,25 +1,47 @@
 'use client';
 
-import { useState } from "react";
-import { useFetch } from "@/hooks/useFetch";
-import { endpoints } from "@/services/api/index";
-import Pagination from "@/components/Pagination";
-
+import { useState } from 'react';
+import { useFetch } from '@/hooks/useFetch';
+import { endpoints } from '@/services/api/index';
+import { Chart } from '@/components/Chart';
+import Pagination from '@/components/Pagination';
 
 export default function Dashboard() {
 	const [offsetProducts, setOffsetProducts] = useState(0);
 	const PRODUCT_LIMIT = 20;
 
-    const { data: products } = useFetch(endpoints.products.getProducts(PRODUCT_LIMIT, offsetProducts));
-    const { data: allProducts } = useFetch(endpoints.products.getProducts(0, 0));
+	// Get and display products
+	const { data: products } = useFetch(endpoints.products.getProducts(PRODUCT_LIMIT, offsetProducts));
+	const { data: allProducts } = useFetch(endpoints.products.getProducts(0, 0));
 	const totalProducts = allProducts?.length;
-	console.log(totalProducts);
 
+	// Display chart
+	const categoryNames = allProducts?.map((product) => product.category);
+	const categoryCount = categoryNames?.map((category) => category.name);
+	const countOcurrences = (arr) => arr?.reduce((prev, curr) => ((prev[curr] = ++prev[curr] || 1), prev), {});
+
+	let data = null;
+	{
+		categoryCount
+			? (data = {
+					labels: Object.keys(countOcurrences(categoryCount)),
+					datasets: [
+						{
+							label: 'Categories',
+							data: Object.values(countOcurrences(categoryCount)),
+							borderWidth: 2,
+							backgroundColor: ['#EC7063 ', '#c0c0c0', '#50AF95', '#f3ba2f', '#2a71d0'],
+						},
+					],
+			  })
+			: null;
+	}
 
 	return (
 		<>
+			<Chart data={data} />
 			<div className='flex flex-col'>
-				{(products) ? (<Pagination totalItems={totalProducts} itemsPerPage={PRODUCT_LIMIT} setOffset={setOffsetProducts} neighbours={2} />) : null}
+				{products ? <Pagination totalItems={totalProducts} itemsPerPage={PRODUCT_LIMIT} setOffset={setOffsetProducts} neighbours={2} /> : null}
 				<div className='-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8'>
 					<div className='py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8'>
 						<div className='shadow overflow-hidden border-b border-gray-200 sm:rounded-lg'>
